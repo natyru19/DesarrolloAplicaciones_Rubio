@@ -1,22 +1,42 @@
-import { Button, StyleSheet, Text, TextInput, View } from "react-native";
+import { Button, StyleSheet, Text, TextInput, View, FlatList } from "react-native";
+import React, { useState } from "react";
 
 export default function App() {
+  const [textValue, setTextValue] = useState("");
+  const [itemsList, setItemsList] = useState([]);
+
+  const onHandleChangeItem = (text) => setTextValue(text);
+
+  const addItem = () => {
+    setItemsList((prevState) => [
+      ...prevState,
+      { id: Math.random(), value: textValue },
+    ]);
+  };
+
+  const renderListItem = ({item}) => (
+    <View style={styles.textContainer}>
+      <Text style={styles.text}>{item.value}</Text>
+    </View>
+  )
+
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
-        <TextInput placeholder="Item de la lista" style={styles.input} />
-        <Button title="BOTON" />
+        <TextInput
+          placeholder="Nuevo Item"
+          style={styles.input}
+          value={textValue}
+          onChangeText={onHandleChangeItem}
+        />
+        <Button title="Agregar" onPress={addItem} />
       </View>
       <View style={styles.listContainer}>
-        <View style={styles.textContainer}>
-            <Text style={styles.text}>Item 1</Text>
-        </View>        
-        <View style={styles.textContainer}>  
-            <Text style={styles.text}>Item 2</Text>
-        </View>
-        <View style={styles.textContainer}>
-          <Text style={styles.text}>Item 3</Text>
-        </View>
+        <FlatList
+          data={itemsList}
+          renderItem={ renderListItem }
+          keyExtractor={item => item.id}         
+        />
       </View>
     </View>
   );
@@ -24,36 +44,45 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 30,
+    paddingTop: 50,    
+    padding: 30,    
+    backgroundColor: "#D8C4B6",
+    height: "100%",
+    
   },
   inputContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    padding: 10,
   },
   input: {
     borderBottomColor: "black",
-    borderBottomWidth: 1,
+    borderBottomWidth: 1,    
     width: 200,
     fontSize: 20,
     paddingLeft: 12,
   },
-  listContainer: {
+  listContainer: {      
     justifyContent: "center",
     alignItems: "center",
-    borderColor: "violet",
+    borderColor: "#4F709C",    
     borderWidth: 5,
+    borderRadius: 15,    
   },
   textContainer: {    
-    borderColor: "pink",
+    borderColor: "#213555",
+    backgroundColor: "#4F709C",
     borderWidth: 5,
     margin: 10,
     width: "90%",
     alignItems: "center",
     padding: 5,
+    borderRadius: 10,    
   },
-  text: {
-    fontSize: 24,   
-    fontWeight: "bold",     
+  text: {    
+    fontSize: 20,
+    color: "white",
+    fontWeight: "bold",
   },
 });
